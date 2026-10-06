@@ -1,0 +1,93 @@
+<div class="pm-bg">
+  <div class="pm-shell">
+
+    <!-- ============ HEADER ============ -->
+    <header class="bg-white border-b border-line">
+      <div class="flex flex-wrap items-center gap-3 px-4 sm:px-6 lg:px-8 py-4">
+        <button type="button" (click)="goDashboard()" class="flex items-center gap-2 select-none group" title="Tableau de bord">
+          <span class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="12" rx="2" />
+              <path stroke-linecap="round" d="M8 20h8M12 16v4" />
+            </svg>
+          </span>
+          <span class="text-xl font-extrabold tracking-tight text-ink">PC<span class="text-primary">Market</span></span>
+          <span class="pm-badge pm-badge-purple ml-1">Admin</span>
+        </button>
+
+        <label class="pm-search order-last sm:order-none w-full sm:w-auto sm:flex-1 sm:max-w-md sm:ml-auto">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" />
+          </svg>
+          <input type="text" [(ngModel)]="searchQuery" (input)="filterAnnonces()" placeholder="Rechercher par titre ou propriétaire..." />
+        </label>
+      </div>
+    </header>
+
+    <!-- ============ NAV PILLS ============ -->
+    <div class="px-4 sm:px-6 lg:px-8 pt-5">
+      <div class="pm-pills">
+        <button type="button" (click)="goDashboard()" class="pm-pill">← Tableau de bord</button>
+        <span class="pm-pill is-active">Annonces</span>
+      </div>
+    </div>
+
+    <main class="pm-content">
+
+      <div class="flex items-center justify-between gap-3 mb-5">
+        <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">Gestion des annonces</h1>
+        <span *ngIf="!loading" class="pm-badge pm-badge-purple">{{ filteredAnnonces.length }} annonce{{ filteredAnnonces.length > 1 ? 's' : '' }}</span>
+      </div>
+
+      <div *ngIf="loading" class="flex justify-center py-24">
+        <div class="pm-spinner"></div>
+      </div>
+
+      <div *ngIf="!loading" class="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+
+        <article *ngFor="let a of filteredAnnonces" class="pm-product">
+
+          <div class="pm-product-media">
+            <img *ngIf="a.image?.length; else noImage" [src]="imageUrl(a.image[0])" [alt]="a.titre" loading="lazy" />
+            <ng-template #noImage>
+              <div class="pm-product-placeholder">
+                <svg class="w-14 h-14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="pm-product-body">
+            <h3 class="pm-product-title" [title]="a.titre">{{ a.titre }}</h3>
+            <p class="pm-product-meta truncate">{{ a.nomUser }} {{ a.prenomUser }}</p>
+            <p class="pm-product-meta truncate">{{ a.emailUser }}</p>
+
+            <span class="pm-price">{{ a.prix !== null ? a.prix + ' DT' : 'Prix non précisé' }}</span>
+
+            <div class="mt-auto pt-4 flex flex-col gap-2">
+              <button type="button" (click)="deleteAnnonce(a.id_annonce)" [disabled]="busyId === a.id_annonce" class="pm-btn pm-btn-danger-soft pm-btn-sm pm-btn-block">
+                Supprimer l'annonce
+              </button>
+              <button type="button" (click)="deleteAnnonceAndUser(a)" [disabled]="busyId === a.id_annonce" class="pm-btn pm-btn-danger pm-btn-sm pm-btn-block">
+                Supprimer annonce + utilisateur
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <div *ngIf="!loading && filteredAnnonces.length === 0" class="pm-empty">
+        <div class="pm-empty-icon">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+        <p class="font-semibold text-lg">Aucune annonce trouvée</p>
+        <p class="text-sm pm-muted">Essayez une autre recherche</p>
+      </div>
+
+    </main>
+  </div>
+</div>

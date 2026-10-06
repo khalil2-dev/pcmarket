@@ -1,0 +1,95 @@
+<!-- ============ HEADER ============ -->
+<header class="bg-white border-b border-line">
+  <div class="flex flex-wrap items-center gap-x-3 sm:gap-x-6 gap-y-3 px-4 sm:px-6 lg:px-8 py-4">
+
+    <!-- Logo -->
+    <button type="button" (click)="goToAnnonces()" class="flex items-center gap-2 select-none group" title="Accueil">
+      <span class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="12" rx="2" />
+          <path stroke-linecap="round" d="M8 20h8M12 16v4" />
+        </svg>
+      </span>
+      <span class="text-lg sm:text-xl font-extrabold tracking-tight text-ink">PC<span class="text-primary">Market</span></span>
+    </button>
+
+    <!-- Actions (right) -->
+    <nav class="ml-auto md:order-3 flex items-center gap-1 sm:gap-2">
+      <button type="button" (click)="goToAnnonces()" routerLink="/annonces" routerLinkActive="!text-primary"
+        class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium text-ink hover:bg-surface transition-colors" title="Annonces">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+        </svg>
+        <span class="hidden lg:inline">Annonces</span>
+      </button>
+
+      <button type="button" (click)="goToSaved()" routerLink="/saved" routerLinkActive="!text-primary"
+        class="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium text-ink hover:bg-surface transition-colors" title="Favoris">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+        </svg>
+        <span class="hidden lg:inline">Favoris</span>
+      </button>
+
+      <!-- shown only on pages that handle (addAnnonce) -->
+      <button *ngIf="addAnnonce.observed" type="button" (click)="onAddAnnonce()" class="pm-btn pm-btn-primary !px-3 sm:!px-4 !py-2" title="Ajouter une annonce">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+        </svg>
+        <span class="hidden sm:inline">Publier</span>
+      </button>
+
+      <button type="button" (click)="goToProfile()"
+        class="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center hover:ring-4 hover:ring-primary-light transition-all" title="Profil">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.118a7.5 7.5 0 0115 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.5-1.632z" />
+        </svg>
+      </button>
+
+      <button type="button" (click)="logout()"
+        class="w-10 h-10 rounded-full text-muted flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors" title="Déconnexion">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Search (center; full width on mobile) -->
+    <!-- shown only on pages that bind [(search)] -->
+    <label *ngIf="searchChange.observed" class="pm-search order-last md:order-2 w-full md:w-auto md:flex-1 md:max-w-md">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" />
+      </svg>
+      <input
+        type="text"
+        placeholder="Rechercher une annonce..."
+        [ngModel]="search"
+        (ngModelChange)="onSearchChange($event)"
+      />
+    </label>
+  </div>
+</header>
+
+<!-- ============ NAVIGATION PILLS ============ -->
+<div class="px-4 sm:px-6 lg:px-8 pt-5">
+  <div class="pm-pills">
+    <a routerLink="/annonces" routerLinkActive="is-active" class="pm-pill">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      Toutes les annonces
+    </a>
+    <a routerLink="/saved" routerLinkActive="is-active" class="pm-pill">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+      </svg>
+      Mes favoris
+    </a>
+    <a routerLink="/profile" routerLinkActive="is-active" class="pm-pill">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.118a7.5 7.5 0 0115 0" />
+      </svg>
+      Mon profil
+    </a>
+  </div>
+</div>

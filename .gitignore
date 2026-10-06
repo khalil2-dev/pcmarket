@@ -1,0 +1,8 @@
+front/node_modules/ 
+front/dist/ 
+backend/target/ 
+.idea/ 
+*.iml 
+.vscode/ 
+.env 
+backend/src/main/resources/application.properties 

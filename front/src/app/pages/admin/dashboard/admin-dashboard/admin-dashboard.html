@@ -1,0 +1,165 @@
+<div class="pm-bg">
+  <div class="pm-shell">
+
+    <!-- ============ HEADER ============ -->
+    <header class="bg-white border-b border-line">
+      <div class="flex flex-wrap items-center gap-3 px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center gap-2 select-none">
+          <span class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center shadow-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="12" rx="2" />
+              <path stroke-linecap="round" d="M8 20h8M12 16v4" />
+            </svg>
+          </span>
+          <span class="text-xl font-extrabold tracking-tight text-ink">PC<span class="text-primary">Market</span></span>
+          <span class="pm-badge pm-badge-purple ml-1">Admin</span>
+        </div>
+
+        <div class="ml-auto flex items-center gap-3">
+          <span class="hidden sm:inline text-sm pm-muted">{{ getCurrentDate() }}</span>
+          <button type="button" (click)="logout()" class="pm-btn pm-btn-danger-soft pm-btn-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            Déconnexion
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ NAV PILLS ============ -->
+    <div class="px-4 sm:px-6 lg:px-8 pt-5">
+      <div class="pm-pills">
+        <span class="pm-pill is-active">Tableau de bord</span>
+        <button type="button" (click)="goUsers()" class="pm-pill">Utilisateurs</button>
+        <button type="button" (click)="goAnnonces()" class="pm-pill">Annonces</button>
+      </div>
+    </div>
+
+    <main class="pm-content">
+
+      <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight mb-5">Tableau de bord administrateur</h1>
+
+      <!-- loading -->
+      <div *ngIf="loading" class="flex items-center justify-center py-24">
+        <div class="pm-spinner"></div>
+      </div>
+
+      <!-- error -->
+      <div *ngIf="error && !loading" class="pm-alert pm-alert-error mb-6 flex items-start gap-3">
+        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <p class="font-semibold">Erreur</p>
+          <p>Impossible de charger les statistiques</p>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && !error">
+
+        <!-- top stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="pm-panel">
+            <div class="pm-stat-icon mb-4">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+              </svg>
+            </div>
+            <p class="text-sm pm-muted font-medium">Total utilisateurs</p>
+            <p class="text-3xl font-extrabold mt-1">{{ stats.users.total }}</p>
+          </div>
+
+          <div class="pm-panel">
+            <div class="pm-stat-icon mb-4">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <p class="text-sm pm-muted font-medium">Nouveaux utilisateurs (30 j)</p>
+            <p class="text-3xl font-extrabold mt-1">{{ stats.users.month }}</p>
+          </div>
+
+          <div class="pm-panel">
+            <div class="pm-stat-icon mb-4">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
+              </svg>
+            </div>
+            <p class="text-sm pm-muted font-medium">Total annonces</p>
+            <p class="text-3xl font-extrabold mt-1">{{ stats.annonces.total }}</p>
+          </div>
+
+          <div class="pm-panel">
+            <div class="pm-stat-icon mb-4">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <p class="text-sm pm-muted font-medium">Nouvelles annonces (30 j)</p>
+            <p class="text-3xl font-extrabold mt-1">{{ stats.annonces.month }}</p>
+          </div>
+        </div>
+
+        <!-- detailed -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <section class="pm-card p-6">
+            <div class="flex items-center justify-between mb-5">
+              <h2 class="text-lg font-bold">Utilisateurs</h2>
+              <span class="text-3xl font-extrabold text-primary">{{ stats.users.total }}</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="pm-stat-tile">
+                <p class="text-xs pm-muted mb-1">Aujourd'hui</p>
+                <p class="text-2xl font-extrabold">{{ stats.users.day }}</p>
+              </div>
+              <div class="pm-stat-tile">
+                <p class="text-xs pm-muted mb-1">7 jours</p>
+                <p class="text-2xl font-extrabold">{{ stats.users.week }}</p>
+              </div>
+              <div class="pm-stat-tile">
+                <p class="text-xs pm-muted mb-1">30 jours</p>
+                <p class="text-2xl font-extrabold">{{ stats.users.month }}</p>
+              </div>
+            </div>
+            <button type="button" (click)="goUsers()" class="pm-btn pm-btn-primary pm-btn-block mt-6 group">
+              Gérer les utilisateurs
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </section>
+
+          <section class="pm-card p-6">
+            <div class="flex items-center justify-between mb-5">
+              <h2 class="text-lg font-bold">Annonces</h2>
+              <span class="text-3xl font-extrabold text-primary">{{ stats.annonces.total }}</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="pm-stat-tile">
+                <p class="text-xs pm-muted mb-1">Aujourd'hui</p>
+                <p class="text-2xl font-extrabold">{{ stats.annonces.day }}</p>
+              </div>
+              <div class="pm-stat-tile">
+                <p class="text-xs pm-muted mb-1">7 jours</p>
+                <p class="text-2xl font-extrabold">{{ stats.annonces.week }}</p>
+              </div>
+              <div class="pm-stat-tile">
+                <p class="text-xs pm-muted mb-1">30 jours</p>
+                <p class="text-2xl font-extrabold">{{ stats.annonces.month }}</p>
+              </div>
+            </div>
+            <button type="button" (click)="goAnnonces()" class="pm-btn pm-btn-primary pm-btn-block mt-6 group">
+              Gérer les annonces
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </section>
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
